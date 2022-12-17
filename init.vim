@@ -95,7 +95,6 @@ noremap <Right> <nop>
 " delete trailing space at the end of lines in programming files
 autocmd! BufWritePre *.vim,*.rs,*.md,*.dsql,*.json,*.sql,*.cs,*.py,*.java,*.c,*.h,*.cpp,*.js,*.scala,*.sc,*.hs,*.lhs %s/\s\+$//e
 
-" TODO: move these to filetype.vim or something
 autocmd! Filetype haskell setlocal ts=2 sw=2
 autocmd! Filetype ps1 setlocal ts=2 sw=2
 autocmd! Filetype rust setlocal ts=4 sw=4
@@ -156,6 +155,7 @@ set belloff=all
 colorscheme base16-solarflare
 set termguicolors
 
+" Options for code completion
 set completeopt=menuone,noinsert,noselect
 
 lua <<EOF
@@ -205,10 +205,14 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "rust_analyzer" }
+local servers = { "rust_analyzer", "hls" }
   for _, lsp in ipairs(servers) do
     nvim_lsp[lsp].setup { on_attach = on_attach }
 end
+
+nvim_lsp.hls.setup({
+
+})
 
 nvim_lsp.rust_analyzer.setup({
     on_attach=on_attach,
