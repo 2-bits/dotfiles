@@ -9,8 +9,7 @@ endif
 call plug#begin(plug_path)
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/nvim-cmp/'
 
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf.vim'
@@ -164,9 +163,9 @@ lua <<EOF
 local nvim_lsp = require'lspconfig'
 
  -- function to attach completion when setting up lsp
-local on_attach = function(client)
-  require'completion'.on_attach(client)
-end
+-- local on_attach = function(client)
+--  require'completion'.on_attach(client)
+-- end
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -174,6 +173,7 @@ local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
+  print(client)
 
   --Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -203,6 +203,9 @@ local on_attach = function(client, bufnr)
   require'completion'.on_attach(client)
 end
 
+-- For some reason, this appears to do nothing. I don't really care as its copy pasta but it caused me
+-- to waste time debugging so it's gone until I figure out why it was ever needed
+
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
 local servers = { "rust_analyzer", "hls" }
@@ -211,7 +214,7 @@ local servers = { "rust_analyzer", "hls" }
 end
 
 nvim_lsp.hls.setup({
-
+    on_attach=on_attach,
 })
 
 nvim_lsp.rust_analyzer.setup({
